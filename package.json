@@ -1,0 +1,106 @@
+{
+  "name": "capcodeproject",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^6",
+    "@sap/hana-client": "^2.15.17",
+    "express": "^4",
+    "hdb": "^0.19.0",
+    "sap-hdbext-promisfied": "latest",
+    "@sap/logging": "latest",
+    "@sap/textbundle": "latest",
+    "@sap/xsenv": "latest",
+    "@sap/xssec": "latest",
+    "accept-language-parser": "latest",
+    "async": "latest",
+    "body-parser": "latest",
+    "compression": "^1.7.4",
+    "dotenv": "^16.0.0",
+    "elementtree": "latest",
+    "event-loop-lag": "latest",
+    "express-graphql": "latest",
+    "express-status-monitor": "latest",
+    "graphql": "latest",
+    "helmet": "latest",
+    "jszip": "latest",
+    "latest-version": "latest",
+    "lodash.merge": "latest",
+    "memory-cache": "latest",
+    "node-xlsx": "latest",
+    "node-zip": "latest",
+    "odata2openapi": "latest",
+    "opossum": "latest",
+    "opossum-prometheus": "latest",
+    "overload-protection": "latest",
+    "passport": "latest",
+    "pg": "latest",
+    "swagger-jsdoc": "latest",
+    "swagger-ui-express": "latest",
+    "swagger2openapi": "latest",
+    "then-request": "latest",
+    "uuid": "latest",
+    "winston": "latest",
+    "ws": "latest",
+    "xmldoc": "latest",
+    "@dynatrace/oneagent-sdk": "latest",
+    "@sap/cds-odata-v2-adapter-proxy": "latest",
+    "@sap/hdbext":"latest"
+  },
+  "devDependencies": {
+    "@sap/hdi-deploy": "4.5.1",
+    "sqlite3": "^5.0.4"
+  },
+  "scripts": {
+    "start": "cds run"
+  },
+  "engines": {
+    "node": "^16.15"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "es2020": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "globals": {
+      "SELECT": true,
+      "INSERT": true,
+      "UPDATE": true,
+      "DELETE": true,
+      "CREATE": true,
+      "DROP": true,
+      "CDL": true,
+      "CQL": true,
+      "CXL": true,
+      "cds": true
+    },
+    "rules": {
+      "no-console": "off",
+      "require-atomic-updates": "off"
+    }
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "db": {
+          "kind": "hana-cloud"
+        },
+        "auth": {
+          "kind": "xsuaa"
+        }
+      },
+      "db": {
+        "kind": "sql"
+      }
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+_schema-version: "3.1"
+ID: capcodeproject
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: capcodeproject-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: capcodeproject-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm-ci
+- name: capcodeproject-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: capcodeproject-db
+    properties:
+      TARGET_CONTAINER: ~{hdi-container-name}
+  - name: cross-container-service-1
+    group: SERVICE_REPLACEMENTS
+    properties:
+      key: ServiceName_1
+      service: ~{the-service-name}
+  parameters:
+    buildpack: nodejs_buildpack
+- name: capcodeproject-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: capcodeproject-destination-service
+    parameters:
+      content-target: true
+  - name: capcodeproject_html_repo_host
+    parameters:
+      service-key:
+        name: capcodeproject_html_repo_host-key
+  - name: uaa_capcodeproject
+    parameters:
+      service-key:
+        name: uaa_capcodeproject-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: capcode_capcodeproject_html_repo_host
+          ServiceInstanceName: capcodeproject-html5-app-host-service
+          ServiceKeyName: capcodeproject_html_repo_host-key
+          sap.cloud.service: capcode
+        - Authentication: OAuth2UserTokenExchange
+          Name: capcode_uaa_capcodeproject
+          ServiceInstanceName: capcodeproject-xsuaa-service
+          ServiceKeyName: uaa_capcodeproject-key
+          sap.cloud.service: capcode
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+resources:
+- name: capcodeproject-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+  properties:
+    hdi-container-name: ${service-name}
+- name: capcodeproject-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      version: 1.0.0
+    service: destination
+    service-name: capcodeproject-destination-service
+    service-plan: lite
+- name: capcodeproject_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: capcodeproject-html5-app-host-service
+    service-plan: app-host
+- name: uaa_capcodeproject
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: capcodeproject-xsuaa-service
+    service-plan: application
+- name: cross-container-service-1
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: capcodeproject-db
+  properties:
+    the-service-name: ${service-name}
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx -p @sap/cds-dk cds build --production
