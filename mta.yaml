@@ -8,6 +8,7 @@ modules:
   path: gen/srv
   requires:
   - name: capcodeproject-db
+  - name: uaa_capcodeproject
   provides:
   - name: srv-api
     properties:
@@ -60,6 +61,30 @@ modules:
         existing_destinations_policy: ignore
   build-parameters:
     no-source: true
+- name: capcodeproject-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: capcodeproject_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - purchaseorderuipurchaseorderui.zip
+      name: purchaseorderuipurchaseorderui
+      target-path: resources/
+- name: purchaseorderuipurchaseorderui
+  type: html5
+  path: app/purchaseorderui
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
 - name: capcodeproject-db
   type: com.sap.xs.hdi-container
@@ -73,10 +98,28 @@ resources:
   parameters:
     config:
       HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: capcodeproject-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: capcodeproject-destination-service
     service-plan: lite
+  requires:
+  - name: srv-api
 - name: capcodeproject_html_repo_host
   type: org.cloudfoundry.managed-service
   parameters:
@@ -97,6 +140,7 @@ resources:
   properties:
     the-service-name: ${service-name}
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:

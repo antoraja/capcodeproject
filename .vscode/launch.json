@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "name": "Run capcodeproject-3",
+      "request": "launch",
+      "type": "pwa-node",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npx",
+      "args": [
+        "cds",
+        "run",
+        "--in-memory?"
+      ],
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "envFile": "${workspaceFolder}/.env3",
+      "env": {
+        "NODE_ENV": "production",
+        "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"/home/user/projects/capcodeproject\\\",\\\"profileName\\\":\\\"production\\\"}\"}"
+      }
+    }
+  ],
+  "version": "0.2.0"
+}

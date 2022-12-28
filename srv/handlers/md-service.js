@@ -30,7 +30,7 @@ module.exports = cds.service.impl(function () {
   })
 
   this.on('loadProductImages', async (req) => {
-    req._.req.loggingContext.getTracer(__filename).info('Inside loadProductImages Handler')
+    //req._.req.loggingContext.getTracer(__filename).info('Inside loadProductImages Handler')
     try {
       const fs = require("fs")
       const fileExists = require('fs').existsSync
