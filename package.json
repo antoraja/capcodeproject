@@ -48,7 +48,8 @@
         "uuid": "latest",
         "winston": "latest",
         "ws": "latest",
-        "xmldoc": "latest"
+        "xmldoc": "latest",
+        "glob": "latest"
     },
     "devDependencies": {
         "@sap/hdi-deploy": "4.5.1",
